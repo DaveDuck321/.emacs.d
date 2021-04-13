@@ -96,21 +96,7 @@
 
 
 ;;----------------------------------------------------------------------------
-;; Automatically enable dired sidebar when interacting with projects
+;; Automatically enable treemacs when interacting with projects
 ;;----------------------------------------------------------------------------
 
-(require 'dired-sidebar)
-
-;; (add-hook 'dired-sidebar-mode-hook
-;;           (lambda ()
-;;             (unless (file-remote-p default-directory)
-;;               (auto-revert-mode))))
-
-(push 'toggle-window-split dired-sidebar-toggle-hidden-commands)
-(push 'rotate-windows dired-sidebar-toggle-hidden-commands)
-
-(setq dired-sidebar-use-term-integration t)
-(setq dired-sidebar-use-custom-font t)
-(setq desktop-save-mode 0)
-
-(add-hook 'projectile-after-switch-project-hook 'dired-sidebar-show-sidebar)
+(add-hook 'projectile-after-switch-project-hook 'treemacs-add-and-display-current-project)
