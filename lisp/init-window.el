@@ -228,7 +228,6 @@
           ("*Finder*" :select t :size 0.3 :align 'below :autoclose t)
           ("^\\*macro expansion\\**" :regexp t :size 0.4 :align 'below)
           ("^\\*elfeed-entry" :regexp t :size 0.7 :align 'below :autoclose t)
-          (" *Install vterm* " :size 0.35 :same t :align 'below)
           (("*Paradox Report*" "*package update results*") :size 0.2 :align 'below :autoclose t)
           ("*Package-Lint*" :size 0.4 :align 'below :autoclose t)
           ("*How Do You*" :select t :size 0.5 :align 'below :autoclose t)
