@@ -63,6 +63,9 @@
   (when centaur-lsp
     (unbind-key "M-." js2-mode-map))
 
+  (setq-default js-indent-level 2)
+  (setq-default js2-bounce-indent-p nil)
+
   (with-eval-after-load 'flycheck
     (when (or (executable-find "eslint_d")
               (executable-find "eslint")
