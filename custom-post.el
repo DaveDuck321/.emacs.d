@@ -75,6 +75,7 @@
 ;; Use S-s to search the whole project for a string (using isearch for interactivity)
 ;; Note: rg-project is very similar. However, this approach allows for interactive highlighting and removes an additional dialog box
 (define-key projectile-mode-map (kbd "s-s") '(lambda () (interactive)(isearch-forward)(rg-isearch-project)))
+(define-key projectile-mode-map (kbd "s-f") 'projectile-find-file)
 
 ;; Open buffers in sane way; only split the screen vertically if there's no horizontal room left
 ;; https://emacs.stackexchange.com/questions/20492/how-can-i-get-a-sensible-split-window-policy
@@ -99,4 +100,19 @@
 ;; Automatically enable treemacs when interacting with projects
 ;;----------------------------------------------------------------------------
 
-(add-hook 'projectile-after-switch-project-hook 'treemacs-add-and-display-current-project)
+(add-hook 'projectile-after-switch-project-hook 'my-display-treemacs-workaround)  ;; really this should just be: 'treemacs-add-and-display-current-project)
+(add-hook 'projectile-find-file-hook 'my-display-treemacs-then-focus-other)
+
+(defun my-display-treemacs-workaround ()
+  "Ensure treemacs instance starts and renders with project"
+  (interactive)
+  (my-display-treemacs-then-focus-other)
+  (run-at-time 0.05 nil 'my-display-treemacs-then-focus-other)  ;; Absolutely awful hack to combat race condition
+  )
+
+(defun my-display-treemacs-then-focus-other ()
+  "opens treemacs without leaving the existing window (this may not be reliable with multiple windows)"
+  (interactive)
+  (treemacs-add-and-display-current-project)
+  ;; (treemacs-select-window)
+  (next-window-any-frame))
