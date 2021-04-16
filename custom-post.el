@@ -65,9 +65,8 @@
 (add-hook 'prog-mode-hook 'flyspell-prog-mode)
 
 ;; The default imenu shortcut conflicts with both the spellcheck and my custom mappings
-;; Remap imenu to C-i (which makes more sense anyway)
-(global-set-key (kbd "C-i") 'imenu)
-
+;; Remap imenu to s-i (which makes more sense anyway)
+(global-set-key (kbd "s-i") 'imenu)  ;;; Ahhh!!! C-i === <tab>???!
 
 ;; Use S-s to search for all occurrences of the last isearch in the current project
 ;; (define-key projectile-mode-map (kbd "s-s") 'rg-isearch-project)
@@ -116,3 +115,59 @@
   (treemacs-add-and-display-current-project)
   ;; (treemacs-select-window)
   (next-window-any-frame))
+
+;;----------------------------------------------------------------------------
+;; Default config doesn't work well in text mode, lets fix that
+;;----------------------------------------------------------------------------
+
+;; Show line number
+(add-hook 'text-mode-hook 'display-line-numbers-mode)
+
+;; Make tab/ backtab behave like a modern editor
+;; https://stackoverflow.com/questions/2249955/emacs-shift-tab-to-left-shift-the-block
+(defun my-indent-region-custom(numSpaces)
+  (progn
+                                        ; default to start and end of current line
+    (setq regionStart (line-beginning-position))
+    (setq regionEnd (line-end-position))
+                                        ; if there's a selection, use that instead of the current line
+    (when (use-region-p)
+      (setq regionStart (region-beginning))
+      (setq regionEnd (region-end))
+      )
+
+    (save-excursion ; restore the position afterwards
+      (goto-char regionStart) ; go to the start of region
+      (setq start (line-beginning-position)) ; save the start of the line
+      (goto-char regionEnd) ; go to the end of region
+      (setq end (line-end-position)) ; save the end of the line
+
+      (indent-rigidly start end numSpaces) ; indent between start and end
+      (setq deactivate-mark nil) ; restore the selected region
+      )
+    )
+  )
+
+(defun my-untab-region (N)
+  (interactive "p")
+  (my-indent-region-custom -4)
+  )
+
+(defun my-tab-region (N)
+  (interactive "p")
+  (if (active-minibuffer-window)
+      (minibuffer-complete)    ; tab is pressed in minibuffer window -> do completion
+                                        ; else
+    (if (string= (buffer-name) "*shell*")
+        (comint-dynamic-complete) ; in a shell, use tab completion
+                                        ; else
+      (if (use-region-p)    ; tab is pressed is any other buffer -> execute with space insertion
+          (my-indent-region-custom 4) ; region was selected, call indent-region
+        (insert "    ") ; else insert four spaces as expected
+        )))
+  )
+
+(define-key text-mode-map (kbd "<backtab>") 'my-untab-region)
+(define-key text-mode-map (kbd "<tab>") 'my-tab-region)
+
+;; custom-post.el ends here

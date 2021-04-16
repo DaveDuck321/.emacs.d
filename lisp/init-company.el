@@ -40,12 +40,12 @@
   :bind (("M-/" . company-complete)
          ("C-M-i" . company-complete)
          :map company-mode-map
-         ("<backtab>" . company-yasnippet)
+         ;; ("<backtab>" . company-yasnippet)
          :map company-active-map
          ("C-p" . company-select-previous)
          ("C-n" . company-select-next)
          ("<tab>" . company-complete-common-or-cycle)
-         ("<backtab>" . my-company-yasnippet)
+         ;; ("<backtab>" . my-company-yasnippet)
          :map company-search-map
          ("C-p" . company-select-previous)
          ("C-n" . company-select-next))
