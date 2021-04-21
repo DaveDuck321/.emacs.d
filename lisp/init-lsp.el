@@ -78,8 +78,9 @@
           :underline (:style wave :color ,(face-foreground 'success)))))
 
      :hook ((prog-mode . (lambda ()
-                           (unless (derived-mode-p 'emacs-lisp-mode 'lisp-mode)
+                           (when (derived-mode-p 'python-mode 'web-mode 'js-mode 'js2-mode 'css-mode 'html-mode 'json-mode 'go-mode 'rustic-mode 'c-mode 'c++-mode 'sh-mode 'java-mode)
                              (lsp-deferred))))
+
             (lsp-mode . (lambda ()
                           ;; Integrate `which-key'
                           (lsp-enable-which-key-integration)
